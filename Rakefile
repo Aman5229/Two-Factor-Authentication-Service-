@@ -51,6 +51,27 @@ namespace :db do
   end
 end
 
+namespace :db do
+  desc 'Run database migrations'
+  task :migrate_production do
+    db_config = YAML.load_file('config/database.yml')['production']
+    Sequel::Migrator.run(Sequel.connect(db_config), 'db/migrations')
+    puts "Migrations executed successfully on production database."
+  end
+
+  desc "Create the production database"
+  task :create_production do
+    db_config = YAML.load_file('config/database.yml')['production']
+    database_name = db_config['database']
+    db_config['database'] = 'postgres'  # Set database to 'postgres' temporarily for creating the new database
+
+    Sequel.connect(db_config) do |db|
+      db.execute("CREATE DATABASE #{database_name}")
+      puts "Production database #{database_name} created successfully."
+    end
+  end
+end
+
 task "server" do
   exec 'ruby app/controllers/users_controller.rb'
 end
