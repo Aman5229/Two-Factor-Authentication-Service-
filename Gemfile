@@ -10,6 +10,7 @@ gem 'byebug'
 gem 'pry'
 gem 'rotp'
 gem 'rqrcode'
+gem 'rake'
 
 group :test do
   gem 'rspec'
